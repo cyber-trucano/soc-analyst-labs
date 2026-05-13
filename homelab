@@ -1,0 +1,103 @@
+# 🏠 Homelab Infrastructure
+
+This repository documents my self-hosted homelab environment, built from scratch using virtualization, Docker, and Linux. It serves as both a learning platform and a foundation for the SOC analyst skills documented in my [soc-analyst-labs](https://github.com/cyber-trucano/soc-analyst-labs) repo.
+
+---
+
+## 🖥️ Infrastructure Overview
+
+| Component | Details |
+|---|---|
+| **Hypervisor** | VMware |
+| **OS** | Ubuntu 26.04 LTS Server |
+| **Hostname** | gobbnet |
+| **Container Runtime** | Docker + Docker Compose |
+| **Management** | Portainer CE |
+| **Network** | Bridged — static LAN IP |
+
+---
+
+## 🐳 Deployed Services
+
+| Service | Purpose | Status |
+|---|---|---|
+| [Portainer CE](https://www.portainer.io/) | Docker container management UI | ✅ Running |
+| [Pi-hole](https://pi-hole.net/) | Network-wide DNS ad blocking | 🔜 Planned |
+| [Jellyfin](https://jellyfin.org/) | Self-hosted media server | 🔜 Planned |
+| [Nginx Proxy Manager](https://nginxproxymanager.com/) | Reverse proxy with SSL | 🔜 Planned |
+| [Minecraft Server](https://docker-minecraft-server.readthedocs.io/) | Self-hosted game server (Paper) | 🔜 Planned |
+| [Authentik](https://goauthentik.io/) | Self-hosted SSO / user management | 🔜 Planned |
+| [Wazuh](https://wazuh.com/) | SIEM — log collection and threat detection | 🔜 Planned |
+
+---
+
+## 🚀 Setup Process
+
+### 1. Base System
+- Installed Ubuntu 26.04 LTS Server via VMware ISO
+- Configured OpenSSH during install for remote access
+- Set bridged networking for LAN reachability
+- Remote management via PuTTY / SSH
+
+### 2. Docker Installation
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install docker.io docker-compose -y
+sudo usermod -aG docker $USER
+```
+
+### 3. Portainer Deployment
+```bash
+docker volume create portainer_data
+
+docker run -d \
+  -p 8000:8000 \
+  -p 9443:9443 \
+  --name portainer \
+  --restart=always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v portainer_data:/data \
+  portainer/portainer-ce:latest
+```
+Access via `https://<server-ip>:9443`
+
+---
+
+## 🗂️ Repository Structure
+
+```
+homelab/
+├── README.md
+└── services/
+    ├── portainer/
+    ├── pihole/
+    ├── jellyfin/
+    ├── minecraft/
+    ├── nginx/
+    ├── authentik/
+    └── wazuh/
+```
+
+---
+
+## 🔗 Related
+
+This homelab directly supports my SOC analyst lab work. Wazuh (SIEM) will monitor all services running here, bridging infrastructure and security operations.
+
+👉 [soc-analyst-labs](https://github.com/cyber-trucano/soc-analyst-labs) — Blue team exercises, log analysis, and incident investigation
+
+---
+
+## 📌 Goals
+
+- [x] Deploy base Ubuntu Server VM
+- [x] Configure SSH remote access
+- [x] Install Docker
+- [x] Deploy Portainer
+- [ ] Deploy Pi-hole
+- [ ] Deploy Jellyfin
+- [ ] Deploy Nginx Proxy Manager
+- [ ] Deploy Minecraft Server
+- [ ] Deploy Authentik (SSO)
+- [ ] Deploy Wazuh SIEM
+- [ ] Migrate to dedicated hardware (laptop server)
